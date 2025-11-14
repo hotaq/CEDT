@@ -1,0 +1,1 @@
+{"name":"Local: main","url":"/Users/chinnaphat/Desktop/cedt/Data/package/main.cpp","tests":[{"id":1762586977961,"input":"u 1\nu 2\nu 3\nu 4\no\nm 2 1\np\nm 3 2\np\nq","output":"Size 3: 3 2 4\nSize 3: 4 3 2"}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"/Users/chinnaphat/Desktop/cedt/Data/package/main.cpp","group":"local","local":true}

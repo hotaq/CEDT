@@ -1,0 +1,1 @@
+{"name":"Local: main","url":"/Users/chinnaphat/Desktop/cedt/Data/package_queue_reverse/main.cpp","tests":[{"id":1762790599539,"input":"5 0 3\n1 2 3 4 5","output":"\n"}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"/Users/chinnaphat/Desktop/cedt/Data/package_queue_reverse/main.cpp","group":"local","local":true}

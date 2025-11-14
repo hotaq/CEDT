@@ -1,0 +1,1 @@
+{"name":"Local: main","url":"/Users/chinnaphat/Desktop/cedt/Data/student 2/main.cpp","tests":[{"id":1762788294695,"input":"5\n10 20 30 40 50","output":"50 40 30 20 10"}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"/Users/chinnaphat/Desktop/cedt/Data/student 2/main.cpp","group":"local","local":true}
