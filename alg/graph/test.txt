@@ -1,0 +1,14 @@
+vector<bool> vis(n,false);
+    for(int i =0;i<8;i++){
+        int target = check[i];
+        for(int st = 0;st<n;st++){
+            dfs(st,ok,-1,vis,target,0);
+            if(ok){
+                cout << "YES";
+                break;
+            }
+        }
+        if(!ok){
+            cout << "No";
+        }
+    }
