@@ -1,0 +1,22 @@
+{
+  "title": "users",
+  "required": ["_id", "email", "passwordHash", "name", "phoneNo", "role"],
+  "properties": {
+    "_id": { "bsonType": "objectId" },
+    "email": {
+      "bsonType": "string",
+      "pattern": "^.+@.+\\..+$"
+    },
+    "passwordHash": { "bsonType": "string" },
+    "name": { "bsonType": "string" },
+    "phoneNo": {
+      "bsonType": "string",
+      "pattern": "^[0-9]{9,10}$"
+    },
+    "role": {
+      "enum": ["USER", "ADMIN"]
+    },
+    "createdAt": { "bsonType": "date" },
+    "updatedAt": { "bsonType": "date" }
+  }
+}

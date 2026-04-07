@@ -1,0 +1,13 @@
+{
+  "attempt": 1,
+  "accepted": false,
+  "rejected_reason": "dry-run",
+  "illegal_changes": [],
+  "agent": {
+    "argv": [],
+    "exit_code": 0,
+    "stdout": "dry-run: agent command skipped",
+    "stderr": ""
+  },
+  "evaluation": null
+}

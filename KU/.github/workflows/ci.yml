@@ -1,0 +1,39 @@
+name: CI
+
+on:
+  push:
+    branches: ["main", "develop"]
+  pull_request:
+
+jobs:
+  python-services-smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install backend dependencies
+        run: pip install -r services/backend/requirements.txt
+
+      - name: Install ai-service dependencies
+        run: pip install -r services/ai-service/requirements.txt
+
+      - name: Backend import smoke test
+        run: python -c "import importlib.util; spec=importlib.util.spec_from_file_location('backend_main','services/backend/app/main.py'); m=importlib.util.module_from_spec(spec); spec.loader.exec_module(m); print(m.app.title)"
+
+      - name: AI service import smoke test
+        run: python -c "import importlib.util; spec=importlib.util.spec_from_file_location('ai_main','services/ai-service/app/main.py'); m=importlib.util.module_from_spec(spec); spec.loader.exec_module(m); print(m.app.title)"
+
+  frontend-placeholder-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Frontend scaffold check
+        run: test -f services/frontend/src/index.html

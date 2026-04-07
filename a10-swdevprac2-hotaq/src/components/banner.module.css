@@ -1,0 +1,32 @@
+.banner {
+  position: relative;
+  height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.bannerImage {
+  object-fit: cover;
+  z-index: 0;
+}
+
+.overlay {
+  position: relative;
+  z-index: 1;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  text-align: center;
+  padding: 20px;
+}
+
+.banner h1 {
+  font-size: 2.5rem;
+  margin: 0;
+}
+
+.banner p {
+  font-size: 1.2rem;
+  margin: 10px 0 0 0;
+}

@@ -1,0 +1,599 @@
+{
+    "info": {
+        "name": "BE-Project-68-CGEY - Full Requirements 1-9 Demo - Reviews",
+        "description": "Complete demo for all 9 requirements.\nRun with Postman Runner or Newman.",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "variable": [
+        {
+            "key": "BASE_URL",
+            "value": "http://localhost:5050/api/v1"
+        },
+        {
+            "key": "USER_TOKEN",
+            "value": ""
+        },
+        {
+            "key": "ADMIN_TOKEN",
+            "value": ""
+        },
+        {
+            "key": "COMPANY_ID",
+            "value": ""
+        },
+        {
+            "key": "BOOKING_ID",
+            "value": ""
+        },
+        {
+            "key": "REVIEW_ID",
+            "value": ""
+        },
+        {
+            "key": "USER_EMAIL",
+            "value": "testuser@example.com"
+        },
+        {
+            "key": "USER_PASSWORD",
+            "value": "password123"
+        },
+        {
+            "key": "ADMIN_EMAIL",
+            "value": "admin@example.com"
+        },
+        {
+            "key": "ADMIN_PASSWORD",
+            "value": "admin123"
+        }
+    ],
+    "item": [
+        {
+            "name": "Setup Review: Register Admin (idempotent)",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "let res = {};",
+                            "try { res = pm.response.json(); } catch (e) {}",
+                            "pm.test('Setup review: admin registration handled', function () {",
+                            "    pm.expect(pm.response.code).to.be.oneOf([200, 201, 400]);",
+                            "    if (pm.response.code !== 400) pm.expect(res.success).to.be.true;",
+                            "});"
+                        ]
+                    }
+                }
+            ],
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n  \"name\": \"Admin User\",\n  \"telephone\": \"0999999999\",\n  \"email\": \"{{ADMIN_EMAIL}}\",\n  \"password\": \"{{ADMIN_PASSWORD}}\",\n  \"role\": \"admin\"\n}"
+                },
+                "url": {
+                    "raw": "{{BASE_URL}}/register",
+                    "host": [
+                        "{{BASE_URL}}"
+                    ],
+                    "path": [
+                        "register"
+                    ]
+                }
+            }
+        },
+        {
+            "name": "Setup Review: Admin Login",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "const res = pm.response.json();",
+                            "pm.test('Admin logged in', function () {",
+                            "    pm.expect(pm.response.code).to.equal(200);",
+                            "    pm.expect(res.data).to.have.property('token');",
+                            "});",
+                            "pm.collectionVariables.set('ADMIN_TOKEN', res.data.token);"
+                        ]
+                    }
+                }
+            ],
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n  \"email\": \"{{ADMIN_EMAIL}}\",\n  \"password\": \"{{ADMIN_PASSWORD}}\"\n}"
+                },
+                "url": {
+                    "raw": "{{BASE_URL}}/login",
+                    "host": [
+                        "{{BASE_URL}}"
+                    ],
+                    "path": [
+                        "login"
+                    ]
+                }
+            }
+        },
+        {
+            "name": "Setup Review: Create Company",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "const res = pm.response.json();",
+                            "pm.test('Company created', function () {",
+                            "    pm.expect(pm.response.code).to.equal(201);",
+                            "    pm.expect(res.success).to.be.true;",
+                            "});",
+                            "pm.collectionVariables.set('COMPANY_ID', res.data._id);"
+                        ]
+                    }
+                }
+            ],
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    },
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{ADMIN_TOKEN}}"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n  \"name\": \"Tech Corp\",\n  \"address\": \"123 Silicon Valley, CA 94043\",\n  \"website\": \"https://techcorp.com\",\n  \"description\": \"A leading technology company\",\n  \"telephone\": \"02-111-1111\"\n}"
+                },
+                "url": {
+                    "raw": "{{BASE_URL}}/companies",
+                    "host": [
+                        "{{BASE_URL}}"
+                    ],
+                    "path": [
+                        "companies"
+                    ]
+                }
+            }
+        },
+        {
+            "name": "Setup Review: Register User (idempotent)",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "let res = {};",
+                            "try { res = pm.response.json(); } catch (e) {}",
+                            "pm.test('Setup review: user registration handled', function () {",
+                            "    pm.expect(pm.response.code).to.be.oneOf([200, 201, 400]);",
+                            "    if (pm.response.code !== 400) pm.expect(res.success).to.be.true;",
+                            "});"
+                        ]
+                    }
+                }
+            ],
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n  \"name\": \"John Doe\",\n  \"telephone\": \"0812345678\",\n  \"email\": \"{{USER_EMAIL}}\",\n  \"password\": \"{{USER_PASSWORD}}\"\n}"
+                },
+                "url": {
+                    "raw": "{{BASE_URL}}/register",
+                    "host": [
+                        "{{BASE_URL}}"
+                    ],
+                    "path": [
+                        "register"
+                    ]
+                }
+            }
+        },
+        {
+            "name": "Setup Review: User Login",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "const res = pm.response.json();",
+                            "pm.test('Req 2: User logged in with email & password', function () {",
+                            "    pm.expect(pm.response.code).to.equal(200);",
+                            "    pm.expect(res.success).to.be.true;",
+                            "    pm.expect(res.data).to.have.property('token');",
+                            "});",
+                            "pm.collectionVariables.set('USER_TOKEN', res.data.token);"
+                        ]
+                    }
+                }
+            ],
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n  \"email\": \"{{USER_EMAIL}}\",\n  \"password\": \"{{USER_PASSWORD}}\"\n}"
+                },
+                "url": {
+                    "raw": "{{BASE_URL}}/login",
+                    "host": [
+                        "{{BASE_URL}}"
+                    ],
+                    "path": [
+                        "login"
+                    ]
+                }
+            }
+        },
+        {
+            "name": "===== REVIEW 1: User Add Review =====",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "let res;",
+                            "try {",
+                            "    res = pm.response.json();",
+                            "} catch (e) {",
+                            "    pm.test('Response should be JSON', function () {",
+                            "        throw new Error('Non-JSON response: ' + pm.response.text());",
+                            "    });",
+                            "    return;",
+                            "}",
+                            "pm.test('Review: user created review for company', function () {",
+                            "    pm.expect(pm.response.code).to.equal(201);",
+                            "    pm.expect(res.success).to.be.true;",
+                            "    pm.expect(res.data).to.have.property('rating');",
+                            "    pm.expect(res.data).to.have.property('company');",
+                            "    pm.expect(res.data).to.have.property('user');",
+                            "});",
+                            "pm.collectionVariables.set('REVIEW_ID', res.data._id);"
+                        ]
+                    }
+                }
+            ],
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    },
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{USER_TOKEN}}"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n  \"rating\": 5,\n  \"comment\": \"Great company\"\n}"
+                },
+                "url": {
+                    "raw": "{{BASE_URL}}/companies/{{COMPANY_ID}}/reviews",
+                    "host": [
+                        "{{BASE_URL}}"
+                    ],
+                    "path": [
+                        "companies",
+                        "{{COMPANY_ID}}",
+                        "reviews"
+                    ]
+                }
+            }
+        },
+        {
+            "name": "Review Validation: Missing rating (fail)",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "let res;",
+                            "try {",
+                            "    res = pm.response.json();",
+                            "} catch (e) {",
+                            "    pm.test('Response should be JSON', function () {",
+                            "        throw new Error('Non-JSON response: ' + pm.response.text());",
+                            "    });",
+                            "    return;",
+                            "}",
+                            "pm.test('Review validation: missing rating rejected', function () {",
+                            "    pm.expect(pm.response.code).to.equal(400);",
+                            "    pm.expect(res.success).to.be.false;",
+                            "});"
+                        ]
+                    }
+                }
+            ],
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    },
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{USER_TOKEN}}"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n  \"comment\": \"Should fail because rating is required\"\n}"
+                },
+                "url": {
+                    "raw": "{{BASE_URL}}/companies/{{COMPANY_ID}}/reviews",
+                    "host": [
+                        "{{BASE_URL}}"
+                    ],
+                    "path": [
+                        "companies",
+                        "{{COMPANY_ID}}",
+                        "reviews"
+                    ]
+                }
+            }
+        },
+        {
+            "name": "Review Validation: Duplicate review (fail)",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "let res;",
+                            "try {",
+                            "    res = pm.response.json();",
+                            "} catch (e) {",
+                            "    pm.test('Response should be JSON', function () {",
+                            "        throw new Error('Non-JSON response: ' + pm.response.text());",
+                            "    });",
+                            "    return;",
+                            "}",
+                            "pm.test('Review validation: duplicate review rejected', function () {",
+                            "    pm.expect(pm.response.code).to.equal(400);",
+                            "    pm.expect(res.success).to.be.false;",
+                            "    pm.expect(res.error).to.include('already submitted');",
+                            "});"
+                        ]
+                    }
+                }
+            ],
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    },
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{USER_TOKEN}}"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n  \"rating\": 4,\n  \"comment\": \"Trying to submit twice\"\n}"
+                },
+                "url": {
+                    "raw": "{{BASE_URL}}/companies/{{COMPANY_ID}}/reviews",
+                    "host": [
+                        "{{BASE_URL}}"
+                    ],
+                    "path": [
+                        "companies",
+                        "{{COMPANY_ID}}",
+                        "reviews"
+                    ]
+                }
+            }
+        },
+        {
+            "name": "===== REVIEW 2: Get Company Reviews =====",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "let res;",
+                            "try {",
+                            "    res = pm.response.json();",
+                            "} catch (e) {",
+                            "    pm.test('Response should be JSON', function () {",
+                            "        throw new Error('Non-JSON response: ' + pm.response.text());",
+                            "    });",
+                            "    return;",
+                            "}",
+                            "pm.test('Review: list reviews by company', function () {",
+                            "    pm.expect(pm.response.code).to.equal(200);",
+                            "    pm.expect(res.success).to.be.true;",
+                            "    pm.expect(res.data).to.be.an('array');",
+                            "    pm.expect(res.count).to.be.greaterThan(0);",
+                            "});"
+                        ]
+                    }
+                }
+            ],
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                    "raw": "{{BASE_URL}}/companies/{{COMPANY_ID}}/reviews",
+                    "host": [
+                        "{{BASE_URL}}"
+                    ],
+                    "path": [
+                        "companies",
+                        "{{COMPANY_ID}}",
+                        "reviews"
+                    ]
+                }
+            }
+        },
+        {
+            "name": "===== REVIEW 3: Get All Reviews =====",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "let res;",
+                            "try {",
+                            "    res = pm.response.json();",
+                            "} catch (e) {",
+                            "    pm.test('Response should be JSON', function () {",
+                            "        throw new Error('Non-JSON response: ' + pm.response.text());",
+                            "    });",
+                            "    return;",
+                            "}",
+                            "pm.test('Review: list all reviews', function () {",
+                            "    pm.expect(pm.response.code).to.equal(200);",
+                            "    pm.expect(res.success).to.be.true;",
+                            "    pm.expect(res.data).to.be.an('array');",
+                            "    pm.expect(res.count).to.be.greaterThan(0);",
+                            "});"
+                        ]
+                    }
+                }
+            ],
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                    "raw": "{{BASE_URL}}/reviews",
+                    "host": [
+                        "{{BASE_URL}}"
+                    ],
+                    "path": [
+                        "reviews"
+                    ]
+                }
+            }
+        },
+        {
+            "name": "===== REVIEW 4: User Update Own Review =====",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "let res;",
+                            "try {",
+                            "    res = pm.response.json();",
+                            "} catch (e) {",
+                            "    pm.test('Response should be JSON', function () {",
+                            "        throw new Error('Non-JSON response: ' + pm.response.text());",
+                            "    });",
+                            "    return;",
+                            "}",
+                            "pm.test('Review: user updated own review', function () {",
+                            "    pm.expect(pm.response.code).to.equal(200);",
+                            "    pm.expect(res.success).to.be.true;",
+                            "    pm.expect(res.data.rating).to.equal(4);",
+                            "});"
+                        ]
+                    }
+                }
+            ],
+            "request": {
+                "method": "PUT",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    },
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{USER_TOKEN}}"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n  \"rating\": 4,\n  \"comment\": \"Updated comment\"\n}"
+                },
+                "url": {
+                    "raw": "{{BASE_URL}}/reviews/{{REVIEW_ID}}",
+                    "host": [
+                        "{{BASE_URL}}"
+                    ],
+                    "path": [
+                        "reviews",
+                        "{{REVIEW_ID}}"
+                    ]
+                }
+            }
+        },
+        {
+            "name": "===== REVIEW 5: User Delete Own Review =====",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "let res;",
+                            "try {",
+                            "    res = pm.response.json();",
+                            "} catch (e) {",
+                            "    pm.test('Response should be JSON', function () {",
+                            "        throw new Error('Non-JSON response: ' + pm.response.text());",
+                            "    });",
+                            "    return;",
+                            "}",
+                            "pm.test('Review: user deleted own review', function () {",
+                            "    pm.expect(pm.response.code).to.equal(200);",
+                            "    pm.expect(res.success).to.be.true;",
+                            "});"
+                        ]
+                    }
+                }
+            ],
+            "request": {
+                "method": "DELETE",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{USER_TOKEN}}"
+                    }
+                ],
+                "url": {
+                    "raw": "{{BASE_URL}}/reviews/{{REVIEW_ID}}",
+                    "host": [
+                        "{{BASE_URL}}"
+                    ],
+                    "path": [
+                        "reviews",
+                        "{{REVIEW_ID}}"
+                    ]
+                }
+            }
+        }
+    ]
+}

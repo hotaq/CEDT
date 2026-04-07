@@ -1,0 +1,17 @@
+[task]
+name = "calculator-fix"
+description = "Make unit tests pass in a small Python workspace."
+workspace = "../../examples/calculator"
+editable_paths = ["calculator.py"]
+instructions_file = "instructions.md"
+max_attempts = 3
+ignored_paths = ["__pycache__/", "tests/__pycache__/"]
+
+[agent]
+command = ["{python_executable}", "{launcher_cwd}/tools/demo_agent.py", "{workspace}", "{prompt_file}"]
+timeout_sec = 30
+
+[evaluator]
+command = ["{python_executable}", "-m", "unittest", "discover", "-s", "tests", "-q"]
+mode = "exit_code"
+timeout_sec = 30

@@ -1,0 +1,29 @@
+{
+  "name": "a-4-hotaq",
+  "version": "1.0.0",
+  "description": "[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/kKKZe60Y)",
+  "homepage": "https://github.com/2110503-CEDT68/a-4-hotaq#readme",
+  "bugs": {
+    "url": "https://github.com/2110503-CEDT68/a-4-hotaq/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/2110503-CEDT68/a-4-hotaq.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon serve.js"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.11"
+  },
+  "dependencies": {
+    "dotenv": "^17.3.1",
+    "express": "^5.2.1",
+    "mongoose": "^9.2.1"
+  }
+}

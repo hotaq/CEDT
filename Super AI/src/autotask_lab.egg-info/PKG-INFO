@@ -1,0 +1,192 @@
+Metadata-Version: 2.4
+Name: autotask-lab
+Version: 0.1.0
+Summary: Task-agnostic autonomous improvement harness
+Requires-Python: >=3.11
+Description-Content-Type: text/markdown
+Requires-Dist: catboost>=1.2.10
+Requires-Dist: numpy>=1.26
+Requires-Dist: pandas>=2.0
+Requires-Dist: scikit-learn>=1.8.0
+Requires-Dist: xgboost>=3.2.0
+
+# autotask-lab
+
+`autotask-lab` is a task-agnostic version of the `autoresearch` loop.
+
+Instead of being hard-wired to LLM pretraining, it treats each workload as:
+
+1. A workspace to edit.
+2. A small set of files or directories the agent is allowed to touch.
+3. Optional shared paths, such as datasets, that are mounted into each attempt
+   workspace as read-only symlinks instead of being copied.
+4. An evaluator command that produces either:
+   - a pass/fail exit code, or
+   - a numeric score to maximize or minimize.
+5. An external coding agent command that edits the copied workspace in place.
+
+The runner creates an isolated copy of the workspace for each attempt, lets the
+agent edit it, runs the evaluator, and only syncs back the allowed paths when
+the result improves.
+
+This means the framework is not tied to Claude Code. Any agent can drive it if
+it can:
+
+- read a prompt file,
+- edit files in a workspace,
+- exit with a status code.
+
+## Why this is different from `autoresearch`
+
+`karpathy/autoresearch` is a focused loop for a single-GPU LLM training task.
+This project keeps the same improvement pattern, but makes the task itself a
+plugin:
+
+- code repair via tests,
+- prompt optimization,
+- benchmark tuning,
+- eval-driven data processing,
+- any other task with a reliable automatic evaluator.
+
+## Project layout
+
+```text
+src/autotask/          core runner
+tasks/calculator_fix/  sample task definition
+examples/calculator/   sample workspace under optimization
+tools/demo_agent.py    tiny local agent used only for the demo
+```
+
+## Quick start
+
+This project is intended to run through `uv`.
+
+```bash
+uv sync
+```
+
+The example below does not need Claude Code or Codex. It uses the bundled demo
+agent so you can verify the loop first.
+
+```bash
+uv run autotask run tasks/calculator_fix/task.toml
+```
+
+Expected behavior:
+
+- baseline test run fails,
+- the demo agent edits the copied workspace,
+- the evaluator passes,
+- the runner syncs the winning edit back into `examples/calculator/calculator.py`.
+
+## Task configuration
+
+Each task lives in a TOML file.
+
+```toml
+[task]
+name = "calculator-fix"
+description = "Make unit tests pass."
+workspace = "../../examples/calculator"
+editable_paths = ["calculator.py"]
+shared_paths = []
+instructions_file = "instructions.md"
+max_attempts = 3
+ignored_paths = ["__pycache__/", "tests/__pycache__/"]
+
+[agent]
+command = ["{python_executable}", "{launcher_cwd}/tools/demo_agent.py", "{workspace}", "{prompt_file}"]
+timeout_sec = 30
+
+[evaluator]
+command = ["{python_executable}", "-m", "unittest", "discover", "-s", "tests", "-q"]
+mode = "exit_code"
+timeout_sec = 30
+```
+
+## Swapping in a real agent
+
+Replace `[agent].command` with a command that works on your machine. The runner
+passes a few placeholders into the argument list:
+
+- `{workspace}`: absolute path to the copied workspace for this attempt
+- `{prompt_file}`: absolute path to the generated prompt for this attempt
+- `{attempt}`: attempt number
+- `{task_name}`: task name
+- `{launcher_cwd}`: directory where you launched the CLI
+- `{python_executable}`: the exact Python interpreter running `autotask`
+
+The command is intentionally provider-agnostic. Adjust it to whichever coding
+agent you use.
+
+Task configs still use `{python_executable}` instead of hard-coding `uv run`.
+That is deliberate: when you launch `autotask` with `uv run`, the placeholder
+already resolves to the project virtualenv Python, so nested evaluator and
+agent commands stay consistent without needing every subcommand to bootstrap
+`uv` again.
+
+## Shared paths
+
+Use `shared_paths` for large read-only assets, especially datasets for ML
+tasks. The runner excludes those paths from the workspace copy and symlinks
+them into each attempt instead.
+
+Example:
+
+```toml
+[task]
+workspace = "../../Competetion/playground-series-s6e3"
+editable_paths = ["baseline_settings.json", "features.py", "model.py", "train.py"]
+shared_paths = ["train.csv", "test.csv", "sample_submission.csv"]
+ignored_paths = ["artifacts/"]
+```
+
+## Evaluation modes
+
+`exit_code`
+
+- Use this for test suites or validation scripts.
+- Improvement means "candidate passes and current best does not."
+
+`regex`
+
+- Use this when the evaluator prints a numeric score.
+- Configure `score_pattern` and `score_direction = "maximize"` or `"minimize"`.
+
+Example:
+
+```toml
+[evaluator]
+command = ["python3", "score.py"]
+mode = "regex"
+score_pattern = "score=([0-9.]+)"
+score_direction = "maximize"
+timeout_sec = 120
+```
+
+## Suggested next steps
+
+After the demo works, the usual path is:
+
+1. Replace the example workspace with your real task workspace.
+2. Point `editable_paths` at the files or directories the agent may change.
+3. Replace the demo agent command with your preferred coding agent.
+4. Wire the evaluator to the metric that actually matters for the task.
+
+If you want stronger isolation later, the next upgrade would be a `git`-based
+backend or containerized attempt sandboxes.
+
+## Competition workflow
+
+For the current tabular competition workspace:
+
+```bash
+uv run autotask run tasks/competition_playground_s6e3/task.toml --max-attempts 1
+```
+
+To run the baseline evaluator directly:
+
+```bash
+cd Competetion/playground-series-s6e3
+uv run python evaluate.py
+```

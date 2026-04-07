@@ -1,0 +1,29 @@
+{
+  "sample_count": 3,
+  "average_char_accuracy": 1.0000,
+  "average_latency_ms": 0.2197,
+  "model_size_bytes": 420,
+  "samples": [
+    {
+      "image_path": "/Users/chinnphats/Desktop/cedt/opensoure/ocrust/fixtures/english-printed/hello_ocr.pgm",
+      "expected_text": "HELLO OCR",
+      "predicted_text": "HELLO OCR",
+      "char_accuracy": 1.0000,
+      "latency_ms": 0.1920
+    },
+    {
+      "image_path": "/Users/chinnphats/Desktop/cedt/opensoure/ocrust/fixtures/english-printed/rust_ocr.pgm",
+      "expected_text": "RUST OCR",
+      "predicted_text": "RUST OCR",
+      "char_accuracy": 1.0000,
+      "latency_ms": 0.2384
+    },
+    {
+      "image_path": "/Users/chinnphats/Desktop/cedt/opensoure/ocrust/fixtures/english-printed/pure_rust.pgm",
+      "expected_text": "PURE RUST",
+      "predicted_text": "PURE RUST",
+      "char_accuracy": 1.0000,
+      "latency_ms": 0.2285
+    }
+  ]
+}

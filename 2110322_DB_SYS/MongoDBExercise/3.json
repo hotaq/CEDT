@@ -1,0 +1,142 @@
+[{
+  "_id": {
+    "$oid": "6981a5e40efcfde5287ccf8b"
+  },
+  "order_id": 3,
+  "order_date": "2020-01-10 23:00:00",
+  "customer_id": 10001,
+  "order_lines": [
+    {
+      "product_id": 1,
+      "ordered_quantity": 10
+    },
+    {
+      "product_id": 3,
+      "ordered_quantity": 11
+    },
+    {
+      "product_id": 5,
+      "ordered_quantity": 1
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6981a5e40efcfde5287ccf8c"
+  },
+  "order_id": 4,
+  "order_date": "2020-01-11 23:00:00",
+  "customer_id": 10001,
+  "order_lines": [
+    {
+      "product_id": 6,
+      "ordered_quantity": 10
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6981a5e40efcfde5287ccf8d"
+  },
+  "order_id": 5,
+  "order_date": "2020-01-12 23:00:00",
+  "customer_id": 10001,
+  "order_lines": [
+    {
+      "product_id": 1,
+      "ordered_quantity": 1
+    },
+    {
+      "product_id": 2,
+      "ordered_quantity": 5
+    },
+    {
+      "product_id": 3,
+      "ordered_quantity": 5
+    },
+    {
+      "product_id": 4,
+      "ordered_quantity": 5
+    },
+    {
+      "product_id": 5,
+      "ordered_quantity": 5
+    },
+    {
+      "product_id": 6,
+      "ordered_quantity": 5
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6981a5e40efcfde5287ccf8e"
+  },
+  "order_id": 6,
+  "order_date": "2020-01-13 23:00:00",
+  "customer_id": 10001
+},
+{
+  "_id": {
+    "$oid": "6981a5e40efcfde5287ccf8f"
+  },
+  "order_id": 7,
+  "order_date": "2020-01-14 23:00:00",
+  "customer_id": 10001
+},
+{
+  "_id": {
+    "$oid": "6981a5e40efcfde5287ccf90"
+  },
+  "order_id": 8,
+  "order_date": "2020-01-15 23:00:00",
+  "customer_id": 10001
+},
+{
+  "_id": {
+    "$oid": "6981a5e40efcfde5287ccf91"
+  },
+  "order_id": 9,
+  "order_date": "2020-01-16 23:00:00",
+  "customer_id": 10001
+},
+{
+  "_id": {
+    "$oid": "6981a5e40efcfde5287ccf92"
+  },
+  "order_id": 10,
+  "order_date": "2020-01-17 23:00:00",
+  "customer_id": 10001
+},
+{
+  "_id": {
+    "$oid": "6981a5e40efcfde5287ccf93"
+  },
+  "order_id": 11,
+  "order_date": "2020-01-18 23:00:00",
+  "customer_id": 10001
+},
+{
+  "_id": {
+    "$oid": "6981a5e40efcfde5287ccf94"
+  },
+  "order_id": 12,
+  "order_date": "2020-01-19 23:00:00",
+  "customer_id": 10001
+},
+{
+  "_id": {
+    "$oid": "6981a5e40efcfde5287ccf95"
+  },
+  "order_id": 14,
+  "order_date": "2020-01-20 23:00:00",
+  "customer_id": 10001
+},
+{
+  "_id": {
+    "$oid": "6981a5e40efcfde5287ccf96"
+  },
+  "order_id": 15,
+  "order_date": "2020-01-21 23:00:00",
+  "customer_id": 10001
+}]

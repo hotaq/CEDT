@@ -1,0 +1,40 @@
+[package]
+name = "thermeye"
+version = "0.1.0"
+edition = "2021"
+description = "macOS TUI for monitoring iOS device thermal state and CPU events via USB"
+authors = ["ThermEye"]
+
+[[bin]]
+name = "thermeye"
+path = "src/main.rs"
+
+[dependencies]
+# --- iOS Device Communication ---
+# Pinned to exact version to avoid breaking changes (crate is in dev stage)
+idevice = { version = "=0.1.53", features = [
+    "usbmuxd",
+    "syslog_relay",
+    "pair",
+] }
+
+# --- Async Runtime ---
+tokio = { version = "1", features = ["full"] }
+
+# --- Log Parsing ---
+regex = "1"
+
+# --- Terminal UI ---
+ratatui = "0.29"
+crossterm = "0.28"
+
+# --- Error Handling ---
+anyhow = "1"
+
+# --- Utilities ---
+chrono = "0.4"
+plist = "1"
+
+[profile.release]
+opt-level = 3
+lto = true

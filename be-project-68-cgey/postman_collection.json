@@ -1,0 +1,895 @@
+{
+    "info": {
+        "name": "BE-Project-68-CGEY - Full Requirements 1-9 Demo",
+        "description": "Complete demo for all 9 requirements.\nRun with Postman Runner or Newman.",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "variable": [
+        {
+            "key": "BASE_URL",
+            "value": "http://localhost:5050/api/v1"
+        },
+        {
+            "key": "USER_TOKEN",
+            "value": ""
+        },
+        {
+            "key": "ADMIN_TOKEN",
+            "value": ""
+        },
+        {
+            "key": "COMPANY_ID",
+            "value": ""
+        },
+        {
+            "key": "BOOKING_ID",
+            "value": ""
+        },
+        {
+            "key": "REVIEW_ID",
+            "value": ""
+        },
+        {
+            "key": "USER_EMAIL",
+            "value": "testuser@example.com"
+        },
+        {
+            "key": "USER_PASSWORD",
+            "value": "password123"
+        },
+        {
+            "key": "ADMIN_EMAIL",
+            "value": "admin@example.com"
+        },
+        {
+            "key": "ADMIN_PASSWORD",
+            "value": "admin123"
+        }
+    ],
+    "item": [
+        {
+            "name": "Setup: Register Admin",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "const res = pm.response.json();",
+                            "pm.test('Admin registered', function () {",
+                            "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                            "    pm.expect(res.success).to.be.true;",
+                            "});"
+                        ]
+                    }
+                }
+            ],
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n  \"name\": \"Admin User\",\n  \"telephone\": \"0999999999\",\n  \"email\": \"{{ADMIN_EMAIL}}\",\n  \"password\": \"{{ADMIN_PASSWORD}}\",\n  \"role\": \"admin\"\n}"
+                },
+                "url": {
+                    "raw": "{{BASE_URL}}/register",
+                    "host": [
+                        "{{BASE_URL}}"
+                    ],
+                    "path": [
+                        "register"
+                    ]
+                }
+            }
+        },
+        {
+            "name": "Setup: Admin Login",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "const res = pm.response.json();",
+                            "pm.test('Admin logged in', function () {",
+                            "    pm.expect(pm.response.code).to.equal(200);",
+                            "    pm.expect(res.data).to.have.property('token');",
+                            "});",
+                            "pm.collectionVariables.set('ADMIN_TOKEN', res.data.token);"
+                        ]
+                    }
+                }
+            ],
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n  \"email\": \"{{ADMIN_EMAIL}}\",\n  \"password\": \"{{ADMIN_PASSWORD}}\"\n}"
+                },
+                "url": {
+                    "raw": "{{BASE_URL}}/login",
+                    "host": [
+                        "{{BASE_URL}}"
+                    ],
+                    "path": [
+                        "login"
+                    ]
+                }
+            }
+        },
+        {
+            "name": "Setup: Create Company",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "const res = pm.response.json();",
+                            "pm.test('Company created', function () {",
+                            "    pm.expect(pm.response.code).to.equal(201);",
+                            "    pm.expect(res.success).to.be.true;",
+                            "});",
+                            "pm.collectionVariables.set('COMPANY_ID', res.data._id);"
+                        ]
+                    }
+                }
+            ],
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    },
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{ADMIN_TOKEN}}"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n  \"name\": \"Tech Corp\",\n  \"address\": \"123 Silicon Valley, CA 94043\",\n  \"website\": \"https://techcorp.com\",\n  \"description\": \"A leading technology company\",\n  \"telephone\": \"02-111-1111\"\n}"
+                },
+                "url": {
+                    "raw": "{{BASE_URL}}/companies",
+                    "host": [
+                        "{{BASE_URL}}"
+                    ],
+                    "path": [
+                        "companies"
+                    ]
+                }
+            }
+        },
+        {
+            "name": "===== REQ 1: User Registration =====",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "const res = pm.response.json();",
+                            "pm.test('Req 1: User registered with name, telephone, email, password', function () {",
+                            "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                            "    pm.expect(res.success).to.be.true;",
+                            "    pm.expect(res.data.name).to.equal('John Doe');",
+                            "    pm.expect(res.data.email).to.equal(pm.collectionVariables.get('USER_EMAIL'));",
+                            "    pm.expect(res.data.telephone).to.equal('0812345678');",
+                            "});"
+                        ]
+                    }
+                }
+            ],
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n  \"name\": \"John Doe\",\n  \"telephone\": \"0812345678\",\n  \"email\": \"{{USER_EMAIL}}\",\n  \"password\": \"{{USER_PASSWORD}}\"\n}"
+                },
+                "url": {
+                    "raw": "{{BASE_URL}}/register",
+                    "host": [
+                        "{{BASE_URL}}"
+                    ],
+                    "path": [
+                        "register"
+                    ]
+                }
+            }
+        },
+        {
+            "name": "Req 1 Validation: Missing name (fail)",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test('Req 1 Validation: No name rejected', function () {",
+                            "    pm.expect(pm.response.code).to.be.oneOf([400, 500]);",
+                            "});"
+                        ]
+                    }
+                }
+            ],
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n  \"telephone\": \"0899999999\",\n  \"email\": \"noname@test.com\",\n  \"password\": \"password123\"\n}"
+                },
+                "url": {
+                    "raw": "{{BASE_URL}}/register",
+                    "host": [
+                        "{{BASE_URL}}"
+                    ],
+                    "path": [
+                        "register"
+                    ]
+                }
+            }
+        },
+        {
+            "name": "Req 1 Validation: Duplicate email (fail)",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test('Req 1 Validation: Duplicate email rejected', function () {",
+                            "    pm.expect(pm.response.code).to.be.oneOf([400, 500]);",
+                            "});"
+                        ]
+                    }
+                }
+            ],
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n  \"name\": \"Dup User\",\n  \"telephone\": \"0899999999\",\n  \"email\": \"{{USER_EMAIL}}\",\n  \"password\": \"password123\"\n}"
+                },
+                "url": {
+                    "raw": "{{BASE_URL}}/register",
+                    "host": [
+                        "{{BASE_URL}}"
+                    ],
+                    "path": [
+                        "register"
+                    ]
+                }
+            }
+        },
+        {
+            "name": "===== REQ 2: User Login =====",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "const res = pm.response.json();",
+                            "pm.test('Req 2: User logged in with email & password', function () {",
+                            "    pm.expect(pm.response.code).to.equal(200);",
+                            "    pm.expect(res.success).to.be.true;",
+                            "    pm.expect(res.data).to.have.property('token');",
+                            "});",
+                            "pm.collectionVariables.set('USER_TOKEN', res.data.token);"
+                        ]
+                    }
+                }
+            ],
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n  \"email\": \"{{USER_EMAIL}}\",\n  \"password\": \"{{USER_PASSWORD}}\"\n}"
+                },
+                "url": {
+                    "raw": "{{BASE_URL}}/login",
+                    "host": [
+                        "{{BASE_URL}}"
+                    ],
+                    "path": [
+                        "login"
+                    ]
+                }
+            }
+        },
+        {
+            "name": "===== REQ 3: View Company List =====",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "const res = pm.response.json();",
+                            "pm.test('Req 3: Companies listed with all fields', function () {",
+                            "    pm.expect(pm.response.code).to.equal(200);",
+                            "    pm.expect(res.data).to.be.an('array');",
+                            "    const c = res.data[0];",
+                            "    pm.expect(c).to.have.property('name');",
+                            "    pm.expect(c).to.have.property('address');",
+                            "    pm.expect(c).to.have.property('website');",
+                            "    pm.expect(c).to.have.property('description');",
+                            "    pm.expect(c).to.have.property('telephone');",
+                            "});",
+                            "if (res.data && res.data.length > 0) pm.collectionVariables.set('COMPANY_ID', res.data[0]._id);"
+                        ]
+                    }
+                }
+            ],
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                    "raw": "{{BASE_URL}}/companies",
+                    "host": [
+                        "{{BASE_URL}}"
+                    ],
+                    "path": [
+                        "companies"
+                    ]
+                }
+            }
+        },
+        {
+            "name": "===== REQ 3: User Create Booking =====",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "const res = pm.response.json();",
+                            "pm.test('Req 3: Booking created (May 10-13)', function () {",
+                            "    pm.expect(pm.response.code).to.equal(201);",
+                            "    pm.expect(res.success).to.be.true;",
+                            "    pm.expect(res.data).to.have.property('bookingDate');",
+                            "    pm.expect(res.data).to.have.property('company');",
+                            "    pm.expect(res.data).to.have.property('user');",
+                            "});",
+                            "pm.collectionVariables.set('BOOKING_ID', res.data._id);"
+                        ]
+                    }
+                }
+            ],
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    },
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{USER_TOKEN}}"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n  \"bookingDate\": \"2022-05-10T10:00:00.000Z\"\n}"
+                },
+                "url": {
+                    "raw": "{{BASE_URL}}/companies/{{COMPANY_ID}}/bookings",
+                    "host": [
+                        "{{BASE_URL}}"
+                    ],
+                    "path": [
+                        "companies",
+                        "{{COMPANY_ID}}",
+                        "bookings"
+                    ]
+                }
+            }
+        },
+        {
+            "name": "Req 3 Validation: Date out of range (fail)",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test('Req 3 Validation: Invalid date rejected', function () {",
+                            "    pm.expect(pm.response.code).to.equal(400);",
+                            "});"
+                        ]
+                    }
+                }
+            ],
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    },
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{USER_TOKEN}}"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n  \"bookingDate\": \"2022-05-01T10:00:00.000Z\"\n}"
+                },
+                "url": {
+                    "raw": "{{BASE_URL}}/companies/{{COMPANY_ID}}/bookings",
+                    "host": [
+                        "{{BASE_URL}}"
+                    ],
+                    "path": [
+                        "companies",
+                        "{{COMPANY_ID}}",
+                        "bookings"
+                    ]
+                }
+            }
+        },
+        {
+            "name": "Req 3: Create Booking 2",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test('Booking 2 created', function () { pm.expect(pm.response.code).to.equal(201); });"
+                        ]
+                    }
+                }
+            ],
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    },
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{USER_TOKEN}}"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n  \"bookingDate\": \"2022-05-11T10:00:00.000Z\"\n}"
+                },
+                "url": {
+                    "raw": "{{BASE_URL}}/companies/{{COMPANY_ID}}/bookings",
+                    "host": [
+                        "{{BASE_URL}}"
+                    ],
+                    "path": [
+                        "companies",
+                        "{{COMPANY_ID}}",
+                        "bookings"
+                    ]
+                }
+            }
+        },
+        {
+            "name": "Req 3: Create Booking 3",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test('Booking 3 created', function () { pm.expect(pm.response.code).to.equal(201); });"
+                        ]
+                    }
+                }
+            ],
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    },
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{USER_TOKEN}}"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n  \"bookingDate\": \"2022-05-12T10:00:00.000Z\"\n}"
+                },
+                "url": {
+                    "raw": "{{BASE_URL}}/companies/{{COMPANY_ID}}/bookings",
+                    "host": [
+                        "{{BASE_URL}}"
+                    ],
+                    "path": [
+                        "companies",
+                        "{{COMPANY_ID}}",
+                        "bookings"
+                    ]
+                }
+            }
+        },
+        {
+            "name": "Req 3 Validation: Max 3 exceeded (fail)",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test('Req 3 Validation: 4th booking rejected', function () {",
+                            "    pm.expect(pm.response.code).to.equal(400);",
+                            "});"
+                        ]
+                    }
+                }
+            ],
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    },
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{USER_TOKEN}}"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n  \"bookingDate\": \"2022-05-13T10:00:00.000Z\"\n}"
+                },
+                "url": {
+                    "raw": "{{BASE_URL}}/companies/{{COMPANY_ID}}/bookings",
+                    "host": [
+                        "{{BASE_URL}}"
+                    ],
+                    "path": [
+                        "companies",
+                        "{{COMPANY_ID}}",
+                        "bookings"
+                    ]
+                }
+            }
+        },
+        {
+            "name": "===== REQ 4: User View Own Bookings =====",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "const res = pm.response.json();",
+                            "pm.test('Req 4: User sees own bookings only', function () {",
+                            "    pm.expect(pm.response.code).to.equal(200);",
+                            "    pm.expect(res.success).to.be.true;",
+                            "    pm.expect(res.data).to.be.an('array');",
+                            "    pm.expect(res.count).to.equal(3);",
+                            "});"
+                        ]
+                    }
+                }
+            ],
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{USER_TOKEN}}"
+                    }
+                ],
+                "url": {
+                    "raw": "{{BASE_URL}}/bookings",
+                    "host": [
+                        "{{BASE_URL}}"
+                    ],
+                    "path": [
+                        "bookings"
+                    ]
+                }
+            }
+        },
+        {
+            "name": "===== REQ 5: User Edit Own Booking =====",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "const res = pm.response.json();",
+                            "pm.test('Req 5: User updated own booking', function () {",
+                            "    pm.expect(pm.response.code).to.equal(200);",
+                            "    pm.expect(res.success).to.be.true;",
+                            "});"
+                        ]
+                    }
+                }
+            ],
+            "request": {
+                "method": "PUT",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    },
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{USER_TOKEN}}"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n  \"bookingDate\": \"2022-05-11T14:00:00.000Z\"\n}"
+                },
+                "url": {
+                    "raw": "{{BASE_URL}}/bookings/{{BOOKING_ID}}",
+                    "host": [
+                        "{{BASE_URL}}"
+                    ],
+                    "path": [
+                        "bookings",
+                        "{{BOOKING_ID}}"
+                    ]
+                }
+            }
+        },
+        {
+            "name": "===== REQ 6: User Delete Own Booking =====",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "const res = pm.response.json();",
+                            "pm.test('Req 6: User deleted own booking', function () {",
+                            "    pm.expect(pm.response.code).to.equal(200);",
+                            "    pm.expect(res.success).to.be.true;",
+                            "});"
+                        ]
+                    }
+                }
+            ],
+            "request": {
+                "method": "DELETE",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{USER_TOKEN}}"
+                    }
+                ],
+                "url": {
+                    "raw": "{{BASE_URL}}/bookings/{{BOOKING_ID}}",
+                    "host": [
+                        "{{BASE_URL}}"
+                    ],
+                    "path": [
+                        "bookings",
+                        "{{BOOKING_ID}}"
+                    ]
+                }
+            }
+        },
+        {
+            "name": "===== REQ 2: User Logout =====",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "const res = pm.response.json();",
+                            "pm.test('Req 2: User logged out', function () {",
+                            "    pm.expect(pm.response.code).to.equal(200);",
+                            "    pm.expect(res.success).to.be.true;",
+                            "});"
+                        ]
+                    }
+                }
+            ],
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{USER_TOKEN}}"
+                    }
+                ],
+                "url": {
+                    "raw": "{{BASE_URL}}/logout",
+                    "host": [
+                        "{{BASE_URL}}"
+                    ],
+                    "path": [
+                        "logout"
+                    ]
+                }
+            }
+        },
+        {
+            "name": "===== REQ 7: Admin Login =====",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "const res = pm.response.json();",
+                            "pm.test('Req 7: Admin logged in', function () {",
+                            "    pm.expect(pm.response.code).to.equal(200);",
+                            "    pm.expect(res.data).to.have.property('token');",
+                            "});",
+                            "pm.collectionVariables.set('ADMIN_TOKEN', res.data.token);"
+                        ]
+                    }
+                }
+            ],
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n  \"email\": \"{{ADMIN_EMAIL}}\",\n  \"password\": \"{{ADMIN_PASSWORD}}\"\n}"
+                },
+                "url": {
+                    "raw": "{{BASE_URL}}/login",
+                    "host": [
+                        "{{BASE_URL}}"
+                    ],
+                    "path": [
+                        "login"
+                    ]
+                }
+            }
+        },
+        {
+            "name": "===== REQ 7: Admin View All Bookings =====",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "const res = pm.response.json();",
+                            "pm.test('Req 7: Admin sees all bookings (including other users)', function () {",
+                            "    pm.expect(pm.response.code).to.equal(200);",
+                            "    pm.expect(res.success).to.be.true;",
+                            "    pm.expect(res.data).to.be.an('array');",
+                            "    pm.expect(res.count).to.be.greaterThan(0);",
+                            "});",
+                            "if (res.data && res.data.length > 0) pm.collectionVariables.set('BOOKING_ID', res.data[0]._id);"
+                        ]
+                    }
+                }
+            ],
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{ADMIN_TOKEN}}"
+                    }
+                ],
+                "url": {
+                    "raw": "{{BASE_URL}}/bookings",
+                    "host": [
+                        "{{BASE_URL}}"
+                    ],
+                    "path": [
+                        "bookings"
+                    ]
+                }
+            }
+        },
+        {
+            "name": "===== REQ 8: Admin Edit Any Booking =====",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "const res = pm.response.json();",
+                            "pm.test('Req 8: Admin updated another user booking', function () {",
+                            "    pm.expect(pm.response.code).to.equal(200);",
+                            "    pm.expect(res.success).to.be.true;",
+                            "});"
+                        ]
+                    }
+                }
+            ],
+            "request": {
+                "method": "PUT",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    },
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{ADMIN_TOKEN}}"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n  \"bookingDate\": \"2022-05-13T15:00:00.000Z\"\n}"
+                },
+                "url": {
+                    "raw": "{{BASE_URL}}/bookings/{{BOOKING_ID}}",
+                    "host": [
+                        "{{BASE_URL}}"
+                    ],
+                    "path": [
+                        "bookings",
+                        "{{BOOKING_ID}}"
+                    ]
+                }
+            }
+        },
+        {
+            "name": "===== REQ 9: Admin Delete Any Booking =====",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "const res = pm.response.json();",
+                            "pm.test('Req 9: Admin deleted another user booking', function () {",
+                            "    pm.expect(pm.response.code).to.equal(200);",
+                            "    pm.expect(res.success).to.be.true;",
+                            "});"
+                        ]
+                    }
+                }
+            ],
+            "request": {
+                "method": "DELETE",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{ADMIN_TOKEN}}"
+                    }
+                ],
+                "url": {
+                    "raw": "{{BASE_URL}}/bookings/{{BOOKING_ID}}",
+                    "host": [
+                        "{{BASE_URL}}"
+                    ],
+                    "path": [
+                        "bookings",
+                        "{{BOOKING_ID}}"
+                    ]
+                }
+            }
+        }
+    ]
+}

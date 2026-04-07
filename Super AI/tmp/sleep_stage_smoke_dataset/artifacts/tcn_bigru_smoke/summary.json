@@ -1,0 +1,47 @@
+{
+  "model_name": "tcn_bigru",
+  "device": "mps",
+  "data_root": "tmp/sleep_stage_smoke_dataset",
+  "artifact_name": "tcn_bigru_smoke",
+  "segment_length": 480,
+  "n_train_files": 1,
+  "n_test_files": 1,
+  "n_train_segments": 743,
+  "n_test_segments": 1,
+  "feature_columns": [
+    "BVP",
+    "ACC_X",
+    "ACC_Y",
+    "ACC_Z",
+    "TEMP",
+    "EDA",
+    "HR",
+    "IBI"
+  ],
+  "classes": [
+    "N1",
+    "N2",
+    "R",
+    "W"
+  ],
+  "fold_strategy": "StratifiedKFold",
+  "selection_metric": "macro_f1",
+  "oof_metrics": {
+    "accuracy": 0.6985195154777928,
+    "macro_f1": 0.5269104769323865
+  },
+  "folds": [
+    {
+      "fold": 1,
+      "best_epoch": 2,
+      "accuracy": 0.706989247311828,
+      "macro_f1": 0.5461717345663408
+    },
+    {
+      "fold": 2,
+      "best_epoch": 2,
+      "accuracy": 0.6900269541778976,
+      "macro_f1": 0.50863706764419
+    }
+  ]
+}

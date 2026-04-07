@@ -1,0 +1,36 @@
+name: db-inclass-setup
+services:
+  db:
+    image: postgres:latest
+    restart: always
+    shm_size: 128mb
+    environment:
+        POSTGRES_PASSWORD: strongpassword
+        POSTGRES_USER: db_student
+        POSTGRES_DB: db_cedt
+    ports:
+        - 5433:5432
+    volumes:
+      - db_inclass_pgdata:/var/lib/postgresql
+    networks:
+      - db-network
+
+  pgadmin:
+    image: dpage/pgadmin4
+    restart: always
+    environment:
+        PGADMIN_DEFAULT_EMAIL: admin@example.com
+        PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+        - 5555:80
+    depends_on:
+        - db
+    networks:
+      - db-network
+
+volumes:
+  db_inclass_pgdata:
+
+networks:
+  db-network:
+    driver : bridge

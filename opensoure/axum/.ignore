@@ -1,0 +1,6 @@
+# Local Forge workspace sync exclusions
+.git
+.forge
+target
+.vscode
+.DS_Store

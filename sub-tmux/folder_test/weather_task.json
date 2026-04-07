@@ -1,0 +1,4 @@
+{
+  "id": "fetch-weather-001",
+  "instructions": "curl -s 'wttr.in/Bangkok?format=3' > weather.txt"
+}

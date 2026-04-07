@@ -1,0 +1,10 @@
+{
+  "session_name": "opencode",
+  "base_dir": ".opencode",
+  "agents_dir": "agents",
+  "tasks_dir": "tasks",
+  "status_dir": "status",
+  "log_file": "log/events.ndjson",
+  "default_shell": "bash",
+  "git_rebase_policy": true
+}

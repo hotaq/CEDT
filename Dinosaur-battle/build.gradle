@@ -1,0 +1,56 @@
+plugins {
+    id 'java'
+    id 'application'
+    id 'org.openjfx.javafxplugin' version '0.1.0'
+}
+
+repositories {
+    mavenCentral()
+}
+
+javafx {
+    version = "21.0.1"
+    modules = [ 'javafx.controls', 'javafx.fxml', 'javafx.media' ]
+}
+
+application {
+    mainClass = 'application.Main'
+}
+
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+tasks.named('run') {
+    notCompatibleWithConfigurationCache('JavaFX run task accesses task extensions at execution time')
+}
+
+tasks.register('coreTest', Test) {
+    group = 'verification'
+    description = 'Runs tests tagged with core'
+    useJUnitPlatform {
+        includeTags 'core'
+    }
+}
+
+tasks.register('statusTest', Test) {
+    group = 'verification'
+    description = 'Runs tests tagged with status'
+    useJUnitPlatform {
+        includeTags 'status'
+    }
+}
+
+tasks.register('specialTest', Test) {
+    group = 'verification'
+    description = 'Runs tests tagged with special'
+    useJUnitPlatform {
+        includeTags 'special'
+    }
+}

@@ -1,0 +1,14 @@
+.gradle
+build/
+!gradle/wrapper/gradle-wrapper.jar
+!**/src/main/**/build/
+!**/src/test/**/build/
+.idea
+*.iws
+*.iml
+*.ipr
+out/
+.DS_Store
+image.png
+image copy.png
+image copy 2.png

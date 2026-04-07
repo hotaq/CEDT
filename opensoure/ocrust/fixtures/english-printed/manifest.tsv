@@ -1,0 +1,4 @@
+# image	expected_text
+hello_ocr.pgm	HELLO OCR
+rust_ocr.pgm	RUST OCR
+pure_rust.pgm	PURE RUST

@@ -1,0 +1,28 @@
+{
+  "title": "bookings",
+  "required": ["_id", "userRef", "slotRef", "dentistRef", "shopRef", "status"],
+  "properties": {
+    "_id": { "bsonType": "objectId" },
+    "userRef": { "bsonType": "objectId" },
+    "slotRef": { "bsonType": "objectId" },
+    "dentistRef": { "bsonType": "objectId" },
+    "shopRef": { "bsonType": "objectId" },
+    "status": {
+      "enum": ["CONFIRMED", "CANCELLED", "COMPLETED"]
+    },
+    "snapshot": {
+      "bsonType": "object",
+      "properties": {
+        "shopName": { "bsonType": "string" },
+        "dentistName": { "bsonType": "string" },
+        "startAt": { "bsonType": "date" },
+        "endAt": { "bsonType": "date" }
+      }
+    },
+    "managedByAdminRef": {
+      "bsonType": ["objectId", "null"]
+    },
+    "createdAt": { "bsonType": "date" },
+    "updatedAt": { "bsonType": "date" }
+  }
+}

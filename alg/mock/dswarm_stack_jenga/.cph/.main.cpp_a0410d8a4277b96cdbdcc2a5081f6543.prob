@@ -1,1 +1,0 @@
-{"name":"Local: main","url":"/Users/chinnaphat/Desktop/cedt/alg/mock/dswarm_stack_jenga/main.cpp","tests":[{"id":1763474902676,"input":"5 2\n10 20 30 40 50\np 3\nc 2","output":"10 30 40"}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"/Users/chinnaphat/Desktop/cedt/alg/mock/dswarm_stack_jenga/main.cpp","group":"local","local":true}

@@ -1,0 +1,17 @@
+{
+  "argv": [
+    "/opt/homebrew/Caskroom/miniforge/base/bin/python3",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "tests",
+    "-q"
+  ],
+  "exit_code": 1,
+  "stdout": "",
+  "stderr": "======================================================================\nFAIL: test_empty_list (test_calculator.CalculatorTests.test_empty_list)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/chinnphats/Desktop/cedt/Super AI/examples/calculator/tests/test_calculator.py\", line 8, in test_empty_list\n    self.assertEqual(sum_numbers([]), 0)\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^\nAssertionError: 1 != 0\n\n======================================================================\nFAIL: test_multiple_values (test_calculator.CalculatorTests.test_multiple_values)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/chinnphats/Desktop/cedt/Super AI/examples/calculator/tests/test_calculator.py\", line 11, in test_multiple_values\n    self.assertEqual(sum_numbers([1, 2, 3]), 6)\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 7 != 6\n\n----------------------------------------------------------------------\nRan 2 tests in 0.001s\n\nFAILED (failures=2)\n",
+  "ok": false,
+  "score": null,
+  "summary": "fail, exit_code=1"
+}

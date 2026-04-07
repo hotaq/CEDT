@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>แจ้งความสนใจรับอุปการะสุนัข - Adopt Me</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./css/adoptme.css">
+
+</head>
+
+<body>
+
+    <header>
+        <a href="index.html" class="back-link">← กลับหน้าหลัก</a>
+        <h1> แจ้งความสนใจรับอุปการะสุนัข</h1>
+        <p>กรอกข้อมูลของคุณเพื่อแจ้งความสนใจรับอุปการะน้องหมา</p>
+    </header>
+
+    <main>
+        <form id="petForm" class="adopt-form" action="#" method="get" novalidate>
+
+            <section class="form-section">
+                <div class="section-header">
+                    <span class="section-number">1</span>
+                    <h2>ข้อมูลส่วนตัวของผู้สนใจรับอุปการะ</h2>
+                </div>
+
+                <div class="form-group">
+                    <label for="fullname">ชื่อ – นามสกุล <span class="required">*</span></label>
+                    <input type="text" id="fullname" name="fullname" placeholder="กรอกชื่อและนามสกุล" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">เบอร์ติดต่อ <span class="required">*</span></label>
+                    <input type="tel" id="phone" name="phone" placeholder="เช่น 081-234-5678" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email <span class="required">*</span></label>
+                    <input type="email" id="email" name="email" placeholder="example@email.com" required>
+                </div>
+            </section>
+
+        
+            <section class="form-section">
+                <div class="section-header">
+                    <span class="section-number">2</span>
+                    <h2>สิ่งแวดล้อมในการเลี้ยงดู</h2>
+                </div>
+
+                <div class="form-group">
+                    <label for="address">ที่อยู่ <span class="required">*</span></label>
+                    <textarea id="address" name="address" rows="4" placeholder="กรอกที่อยู่ของคุณ เช่น บ้านเลขที่ ถนน ตำบล อำเภอ จังหวัด รหัสไปรษณีย์" required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="housing">ลักษณะที่พักอาศัย <span class="required">*</span></label>
+                    <select id="housing" name="housing" required>
+                        <option value="" disabled selected>-- เลือกลักษณะที่พักอาศัย --</option>
+                        <option value="garden_house">บ้านสวน</option>
+                        <option value="single_house">บ้านเดี่ยว</option>
+                        <option value="townhome">บ้านทาวน์โฮม</option>
+                        <option value="condo">คอนโดมิเนียม / หอพัก</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>ลักษณะการเลี้ยงสุนัข <span class="required">*</span></label>
+                    <div class="radio-group">
+                        <label class="radio-label">
+                            <input type="radio" name="dog_location" value="indoor" required>
+                            <span class="radio-custom"></span>
+                            เลี้ยงสุนัขภายในบ้าน
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="dog_location" value="outdoor">
+                            <span class="radio-custom"></span>
+                            เลี้ยงสุนัขภายนอกบ้าน
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="pet_count">จำนวนสัตว์เลี้ยงที่มีอยู่ปัจจุบัน <span class="required">*</span></label>
+                    <input type="number" id="petCount" name="pet_count" min="0" max="100" placeholder="0" required>
+                </div>
+
+                <div class="form-group checkbox-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="agree" name="disclaimer" required>
+                        <span class="checkbox-custom"></span>
+                        การส่งแบบฟอร์มนี้เป็นการแจ้งความสนใจ โดยไม่รับรองการได้รับอุปการะสุนัข
+                    </label>
+                </div>
+            </section>
+
+            <div class="form-actions">
+                <a href="index.html" class="btn-secondary">ยกเลิก</a>
+                <button type="submit" class="btn-primary">Submit Form</button>
+            </div>
+
+        </form>
+    </main>
+
+    <footer>
+        <div class="student-info">
+            <strong>รหัสนิสิต:</strong> 6833051421 | <strong>ชื่อ-นามสกุล:</strong> ชินพัฒน์ ขุนเจริญ
+        </div>
+    </footer>
+
+    <script src="sciprt.js"></script>
+</body>
+
+</html>

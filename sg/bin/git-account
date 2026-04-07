@@ -1,0 +1,204 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+DEFAULT_CONFIG_ROOT="${XDG_CONFIG_HOME:-$HOME/.config}/git-account"
+CONFIG_ROOT="${GIT_ACCOUNT_CONFIG_ROOT:-$DEFAULT_CONFIG_ROOT}"
+PRESET_FILE="$CONFIG_ROOT/presets.tsv"
+
+usage() {
+  cat <<'EOF'
+Usage:
+  git account add <preset> <email> <name>
+  git account use <preset>
+  git account list
+  git account remove <preset>
+  git account current
+
+Examples:
+  git account add work dev@company.com "Dev User"
+  git account add personal me@example.com "My Name"
+  git account list
+  git account use work
+EOF
+}
+
+fail() {
+  printf 'Error: %s\n' "$1" >&2
+  exit 1
+}
+
+require_arg_count() {
+  local expected="$1"
+  local actual="$2"
+  local message="$3"
+
+  [[ "$actual" -eq "$expected" ]] || fail "$message"
+}
+
+ensure_store() {
+  mkdir -p "$CONFIG_ROOT"
+  [[ -f "$PRESET_FILE" ]] || : >"$PRESET_FILE"
+}
+
+require_git_repo() {
+  git rev-parse --is-inside-work-tree >/dev/null 2>&1 || fail "not inside a Git repository"
+}
+
+validate_field() {
+  local value="$1"
+  local label="$2"
+
+  [[ -n "$value" ]] || fail "$label cannot be empty"
+  [[ "$value" != *$'\t'* ]] || fail "$label cannot contain tabs"
+  [[ "$value" != *$'\n'* ]] || fail "$label cannot contain newlines"
+  return 0
+}
+
+create_temp_file() {
+  mktemp "${PRESET_FILE}.XXXXXX"
+}
+
+find_preset() {
+  local preset="$1"
+
+  awk -F '\t' -v preset="$preset" '$1 == preset { print $0; exit }' "$PRESET_FILE"
+}
+
+save_preset() {
+  local preset="$1"
+  local email="$2"
+  local name="$3"
+  local temp_file
+
+  temp_file="$(create_temp_file)"
+
+  awk -F '\t' -v preset="$preset" '$1 != preset { print $0 }' "$PRESET_FILE" >"$temp_file"
+  printf '%s\t%s\t%s\n' "$preset" "$email" "$name" >>"$temp_file"
+  mv "$temp_file" "$PRESET_FILE"
+}
+
+remove_preset() {
+  local preset="$1"
+  local temp_file
+
+  temp_file="$(create_temp_file)"
+
+  awk -F '\t' -v preset="$preset" '$1 != preset { print $0 }' "$PRESET_FILE" >"$temp_file"
+  mv "$temp_file" "$PRESET_FILE"
+}
+
+command_add() {
+  require_arg_count 3 "$#" "add requires: <preset> <email> <name>"
+  ensure_store
+
+  local preset="$1"
+  local email="$2"
+  local name="$3"
+
+  validate_field "$preset" "preset"
+  validate_field "$email" "email"
+  validate_field "$name" "name"
+
+  save_preset "$preset" "$email" "$name"
+
+  printf 'Saved preset "%s"\n' "$preset"
+}
+
+command_use() {
+  require_arg_count 1 "$#" "use requires: <preset>"
+  ensure_store
+
+  local preset="$1"
+  local line email name
+
+  require_git_repo
+
+  line="$(find_preset "$preset")"
+  [[ -n "$line" ]] || fail "preset \"$preset\" not found"
+
+  IFS=$'\t' read -r _ email name <<<"$line"
+
+  git config --local user.email "$email"
+  git config --local user.name "$name"
+
+  printf 'Applied preset "%s"\n' "$preset"
+  printf 'user.name=%s\n' "$name"
+  printf 'user.email=%s\n' "$email"
+}
+
+command_list() {
+  require_arg_count 0 "$#" "list takes no arguments"
+  ensure_store
+
+  if [[ ! -s "$PRESET_FILE" ]]; then
+    printf 'No presets saved.\n'
+    return 0
+  fi
+
+  awk -F '\t' '{ printf "%-16s %-30s %s\n", $1, $2, $3 }' "$PRESET_FILE"
+}
+
+command_remove() {
+  require_arg_count 1 "$#" "remove requires: <preset>"
+  ensure_store
+
+  local preset="$1"
+  local line
+
+  line="$(find_preset "$preset")"
+  [[ -n "$line" ]] || fail "preset \"$preset\" not found"
+
+  remove_preset "$preset"
+  printf 'Removed preset "%s"\n' "$preset"
+}
+
+command_current() {
+  require_arg_count 0 "$#" "current takes no arguments"
+  require_git_repo
+
+  printf 'user.name=%s\n' "$(git config --local --get user.name || true)"
+  printf 'user.email=%s\n' "$(git config --local --get user.email || true)"
+}
+
+command_help() {
+  require_arg_count 0 "$#" "help takes no arguments"
+  usage
+}
+
+main() {
+  [[ $# -gt 0 ]] || {
+    usage
+    exit 1
+  }
+
+  local command="$1"
+  shift
+
+  case "$command" in
+    add)
+      command_add "$@"
+      ;;
+    use)
+      command_use "$@"
+      ;;
+    list)
+      command_list "$@"
+      ;;
+    remove|rm|delete)
+      command_remove "$@"
+      ;;
+    current)
+      command_current "$@"
+      ;;
+    help|-h|--help)
+      command_help "$@"
+      ;;
+    *)
+      usage
+      fail "unknown command \"$command\""
+      ;;
+  esac
+}
+
+main "$@"

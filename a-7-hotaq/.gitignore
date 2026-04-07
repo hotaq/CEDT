@@ -1,0 +1,8 @@
+node_modules/*
+# config/config.env
+test.js
+testcase1.json
+testcase2.json
+tests/
+__tests__/
+Coverage/

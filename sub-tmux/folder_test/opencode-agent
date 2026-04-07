@@ -1,0 +1,140 @@
+#!/usr/bin/env python3
+import sys
+import os
+import json
+import time
+import subprocess
+from datetime import datetime
+
+def find_config():
+    # Try current dir, then parents
+    curr = os.getcwd()
+    while curr != "/":
+        path = os.path.join(curr, ".opencode/config.json")
+        if os.path.exists(path):
+            return path
+        curr = os.path.dirname(curr)
+    return None
+
+def load_config():
+    path = find_config()
+    if not path:
+        print("Error: config.json not found.")
+        sys.exit(1)
+    with open(path, 'r') as f:
+        # root is the parent of .opencode
+        return json.load(f), os.path.dirname(os.path.dirname(path))
+
+def log_event(agent, event, details=None):
+    config, root = load_config()
+    log_path = os.path.join(root, config["log_file"])
+    entry = {
+        "ts": datetime.now().isoformat(),
+        "agent": agent,
+        "event": event
+    }
+    if details:
+        entry.update(details)
+    
+    with open(log_path, 'a') as f:
+        f.write(json.dumps(entry) + "\n")
+
+def write_status(agent, task_id, state, progress=""):
+    config, root = load_config()
+    status_path = os.path.join(root, config["status_dir"], f"{agent}.json")
+    data = {
+        "task_id": task_id,
+        "state": state,
+        "progress": progress,
+        "last_update": datetime.now().isoformat()
+    }
+    with open(status_path, 'w') as f:
+        json.dump(data, f, indent=2)
+
+def step(agent):
+    config, root = load_config()
+    task_path = os.path.join(root, config["tasks_dir"], f"{agent}.json")
+    status_path = os.path.join(root, config["status_dir"], f"{agent}.json")
+    
+    if not os.path.exists(task_path):
+        return
+
+    with open(task_path, 'r') as f:
+        task = json.load(f)
+    
+    if task.get("status") != "pending":
+        return
+
+    task_id = task.get("id", "unknown")
+
+    # Check if we already handled this task
+    if os.path.exists(status_path):
+        with open(status_path, 'r') as f:
+            current_status = json.load(f)
+            if current_status.get("task_id") == task_id and current_status.get("state") in ["done", "failed", "running"]:
+                return
+
+    write_status(agent, task_id, "running", "Started task")
+    log_event(agent, "task_started", {"task": task_id})
+    
+    # Execute instructions (v0: just print for now or execute shell)
+    instructions = task.get("instructions", "")
+    print(f"[{agent}] Executing: {instructions}")
+    
+    # Simple execution logic
+    res = subprocess.run(instructions, shell=True, capture_output=True, text=True)
+    
+    if res.returncode == 0:
+        write_status(agent, task_id, "done", "Completed successfully")
+        log_event(agent, "task_done", {"task": task_id})
+        # Mark task as done in the task file (Wait, plan says agent NEVER edits task files?)
+        # Section 9 says: "Agent NEVER edits task files". 
+        # So we only update status. The coordinator should check status and update task?
+        # Section 9 pseudocode says "write status = done". It doesn't mention updating task file.
+    else:
+        write_status(agent, task_id, "failed", f"Error: {res.stderr}")
+        log_event(agent, "task_failed", {"task": task_id, "error": res.stderr})
+
+    # Commit + Push status
+    subprocess.run("git add .opencode/status/ .opencode/log/", shell=True)
+    subprocess.run(f"git commit -m 'agent({agent}): update status for {task_id}'", shell=True)
+    
+    # Only push if remote exists
+    res = subprocess.run("git remote", shell=True, capture_output=True, text=True)
+    if res.stdout.strip():
+        subprocess.run("git push", shell=True)
+
+def bootstrap(agent):
+    print(f"Bootstrapping agent: {agent}")
+    branch = f"agent/{agent}"
+    # Ensure we are on the agent branch
+    subprocess.run(f"git checkout {branch}", shell=True)
+    
+    while True:
+        # Check if we are actually on the branch
+        res = subprocess.run("git branch --show-current", shell=True, capture_output=True, text=True)
+        if res.stdout.strip() != branch:
+             subprocess.run(f"git checkout {branch}", shell=True)
+             
+        subprocess.run("git pull --rebase origin {branch} 2>/dev/null || git pull --rebase", shell=True)
+        step(agent)
+        time.sleep(2)
+
+def main():
+    if len(sys.argv) < 3:
+        print("Usage: opencode-agent [bootstrap|step] [agent_name]")
+        sys.exit(1)
+        
+    cmd = sys.argv[1]
+    agent = sys.argv[2]
+    
+    if cmd == "bootstrap":
+        bootstrap(agent)
+    elif cmd == "step":
+        step(agent)
+    else:
+        print(f"Unknown command: {cmd}")
+        sys.exit(1)
+
+if __name__ == "__main__":
+    main()

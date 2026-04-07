@@ -1,0 +1,190 @@
+#!/usr/bin/env python3
+import sys
+import os
+import json
+import subprocess
+from datetime import datetime
+
+CONFIG_PATH = ".opencode/config.json"
+
+def find_config():
+    curr = os.getcwd()
+    while curr != "/":
+        path = os.path.join(curr, ".opencode/config.json")
+        if os.path.exists(path):
+            return path
+        curr = os.path.dirname(curr)
+    return None
+
+def load_config():
+    path = find_config()
+    if not path:
+        print(f"Error: config.json not found. Run 'opencode init'?")
+        sys.exit(1)
+    with open(path, 'r') as f:
+        return json.load(f), os.path.dirname(os.path.dirname(path))
+
+def run_command(cmd):
+    return subprocess.run(cmd, shell=True, capture_output=True, text=True)
+
+def init():
+    root = os.getcwd()
+    dirs = [".opencode/agents", ".opencode/tasks", ".opencode/status", ".opencode/log"]
+    for d in dirs:
+        os.makedirs(os.path.join(root, d), exist_ok=True)
+    
+    config = {
+        "session_name": "opencode",
+        "base_dir": ".opencode",
+        "agents_dir": "agents",
+        "tasks_dir": "tasks",
+        "status_dir": "status",
+        "log_file": "log/events.ndjson",
+        "default_shell": "bash",
+        "git_rebase_policy": True
+    }
+    with open(os.path.join(root, ".opencode/config.json"), 'w') as f:
+        json.dump(config, f, indent=2)
+    print("Initialized .opencode structure.")
+
+def spawn(agents):
+    config, root = load_config()
+    session = config["session_name"]
+    
+    res = run_command(f"tmux has-session -t {session}")
+    if res.returncode != 0:
+        run_command(f"tmux new-session -d -s {session} -n coord")
+        print(f"Created tmux session: {session}")
+
+    for agent in agents:
+        agent_window = f"{session}:{agent}"
+        res = run_command(f"tmux list-windows -t {session} -F '#W'")
+        if agent in res.stdout.splitlines():
+            print(f"Agent {agent} already exists.")
+            continue
+        
+        branch = f"agent/{agent}"
+        res = run_command(f"git rev-parse --verify {branch}")
+        if res.returncode != 0:
+            run_command(f"git branch {branch}")
+            print(f"Created branch: {branch}")
+
+        agent_dir = os.path.join(root, config["base_dir"], "agents", agent)
+        if not os.path.exists(agent_dir):
+             run_command(f"git worktree add {agent_dir} {branch}")
+             print(f"Created worktree at: {agent_dir}")
+
+        run_command(f"tmux new-window -t {session} -n {agent}")
+        bootstrap_cmd = f"cd {agent_dir} && {os.path.join(root, 'opencode-agent')} bootstrap {agent}"
+        run_command(f"tmux send-keys -t {agent_window} '{bootstrap_cmd}' Enter")
+        print(f"Spawned agent: {agent}")
+
+def assign(agent, task_file):
+    config, root = load_config()
+    target = os.path.join(root, config["base_dir"], config["tasks_dir"], f"{agent}.json")
+    
+    if not os.path.exists(task_file):
+        print(f"Error: Task file {task_file} not found.")
+        sys.exit(1)
+        
+    with open(task_file, 'r') as f:
+        task_data = json.load(f)
+    
+    task_data["status"] = "pending"
+    
+    with open(target, 'w') as f:
+        json.dump(task_data, f, indent=2)
+    
+    print(f"Assigned task to {agent}: {task_data.get('id', 'unknown')}")
+
+def status():
+    config, root = load_config()
+    status_dir = os.path.join(root, config["base_dir"], config["status_dir"])
+    
+    print(f"{'AGENT':<15} {'TASK':<20} {'STATE':<10} {'PROGRESS'}")
+    print("-" * 60)
+    
+    if not os.path.exists(status_dir):
+        return
+
+    for f in sorted(os.listdir(status_dir)):
+        if f.endswith(".json"):
+            agent = f.replace(".json", "")
+            with open(os.path.join(status_dir, f), 'r') as sf:
+                try:
+                    data = json.load(sf)
+                    print(f"{agent:<15} {data.get('task_id', 'N/A'):<20} {data.get('state', 'N/A'):<10} {data.get('progress', '')}")
+                except json.JSONDecodeError:
+                    print(f"{agent:<15} ERROR READING STATUS")
+
+def logs(agent):
+    config, root = load_config()
+    log_path = os.path.join(root, config["base_dir"], config["log_file"])
+    if not os.path.exists(log_path):
+        print("No logs found.")
+        return
+    
+    with open(log_path, 'r') as f:
+        for line in f:
+            try:
+                data = json.loads(line)
+                if data.get("agent") == agent:
+                    print(f"[{data.get('ts')}] {data.get('event')}: {json.dumps(data.get('details', data))}")
+            except json.JSONDecodeError:
+                continue
+
+def merge(agent):
+    branch = f"agent/{agent}"
+    print(f"Merging {branch} into main (rebase)...")
+    res = run_command(f"git checkout main && git rebase {branch}")
+    if res.returncode == 0:
+        print(f"Successfully merged {agent}.")
+    else:
+        print(f"Merge failed: {res.stderr}")
+        print("Manual intervention required or rebase --abort")
+
+def kill(agent):
+    config, root = load_config()
+    session = config["session_name"]
+    run_command(f"tmux kill-window -t {session}:{agent}")
+    print(f"Killed agent: {agent}")
+
+def main():
+    if len(sys.argv) < 2:
+        print("Usage: opencode [init|spawn|assign|status|logs|kill|merge] ...")
+        sys.exit(1)
+        
+    cmd = sys.argv[1]
+    
+    if cmd == "init":
+        init()
+    elif cmd == "spawn":
+        spawn(sys.argv[2:])
+    elif cmd == "assign":
+        if len(sys.argv) < 4:
+            print("Usage: opencode assign [agent] [task_file]")
+            sys.exit(1)
+        assign(sys.argv[2], sys.argv[3])
+    elif cmd == "status":
+        status()
+    elif cmd == "logs":
+        if len(sys.argv) < 3:
+            print("Usage: opencode logs [agent]")
+            sys.exit(1)
+        logs(sys.argv[2])
+    elif cmd == "kill":
+        if len(sys.argv) < 3:
+            print("Usage: opencode kill [agent]")
+            sys.exit(1)
+        kill(sys.argv[2])
+    elif cmd == "merge":
+        if len(sys.argv) < 3:
+            print("Usage: opencode merge [agent]")
+            sys.exit(1)
+        merge(sys.argv[2])
+    else:
+        print(f"Unknown command: {cmd}")
+        sys.exit(1)
+
+if __name__ == "__main__":
+    main()

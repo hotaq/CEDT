@@ -1,0 +1,1 @@
+{"name":"Local: zz","url":"/Users/chinnphats/Desktop/cedt/comprog/zz.cpp","tests":[{"id":1769175001004,"input":"AAA 10000\nBBB 10001\nCCC 10002\nDDD 10003\nEEE 10004\nEND","output":""}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"/Users/chinnphats/Desktop/cedt/comprog/zz.cpp","group":"local","local":true}

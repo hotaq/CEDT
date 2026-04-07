@@ -1,0 +1,20 @@
+[package]
+name = "ocrust"
+version = "0.1.0"
+edition = "2024"
+description = "Rust-owned OCR research prototype for English printed text"
+license = "MIT"
+publish = false
+
+[lib]
+name = "ocrust"
+path = "src/lib.rs"
+
+[[bin]]
+name = "benchmark_report"
+path = "src/bin/benchmark_report.rs"
+
+[[bench]]
+name = "cpu_inference"
+path = "benches/cpu_inference.rs"
+harness = false
