@@ -1,13 +1,29 @@
 # OS / editor
 .DS_Store
-.omx/
 **/.DS_Store
 **/.idea/
 
+# Workspace / orchestration state
+.omx/
+**/.omx/
+**/.sisyphus/
+**/.swc/
+**/.cursor/
+**/.codex/tmp/
+**/.codex/shell_snapshots/
+**/_bmad-output/
+
 # Nested VCS metadata
+**/.git
 **/.git/
 **/.svn/
 **/.hg/
+
+# Local secrets and scratch files
+**/.env
+**/.env.*
+!**/.env.example
+**/*.swp
 
 # Dependency and build artifacts
 **/node_modules/
@@ -17,6 +33,7 @@
 **/build/
 **/.turbo/
 **/.cache/
+**/.uv-cache/
 **/.venv/
 **/venv/
 **/env/
@@ -24,6 +41,7 @@
 **/.pytest_cache/
 **/.mypy_cache/
 **/.ruff_cache/
+**/.gradle/
 **/*.pyc
 **/*.pyo
 **/*.o
@@ -37,216 +55,23 @@
 **/*.dll
 **/*.log
 
-# Omitted oversized files
-/2110322_DB_SYS/SQLStoredProcedures/customers-500000.csv
-/Super AI/Competetion/playground-series-s6e3/test.csv
-/Super AI/Competetion/playground-series-s6e3/train.csv
-/Super AI/Competetion/super-ai-engineer-ss-6-heart-disease-prediction/train.csv
-/Super AI/Competetion/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train001.csv
-/Super AI/Competetion/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train002.csv
-/Super AI/Competetion/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train003.csv
-/Super AI/Competetion/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train004.csv
-/Super AI/Competetion/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train005.csv
-/Super AI/Competetion/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train006.csv
-/Super AI/Competetion/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train007.csv
-/Super AI/Competetion/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train008.csv
-/Super AI/Competetion/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train009.csv
-/Super AI/Competetion/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train010.csv
-/Super AI/Competetion/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train011.csv
-/Super AI/Competetion/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train012.csv
-/Super AI/Competetion/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train013.csv
-/Super AI/Competetion/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train014.csv
-/Super AI/Competetion/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train015.csv
-/Super AI/Competetion/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train016.csv
-/Super AI/Competetion/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train017.csv
-/Super AI/Competetion/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train018.csv
-/Super AI/Competetion/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train019.csv
-/Super AI/Competetion/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train020.csv
-/Super AI/Competetion/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train021.csv
-/Super AI/Competetion/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train022.csv
-/Super AI/Competetion/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train023.csv
-/Super AI/Competetion/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train024.csv
-/Super AI/Competetion/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train025.csv
-/Super AI/Competetion/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train026.csv
-/Super AI/Competetion/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train027.csv
-/Super AI/Competetion/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train028.csv
-/Super AI/Competetion/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train029.csv
-/Super AI/Competetion/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train030.csv
-/Super AI/Competetion/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train031.csv
-/Super AI/Competetion/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train032.csv
-/Super AI/Competetion/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train033.csv
-/Super AI/Competetion/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train034.csv
-/Super AI/Competetion/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train035.csv
-/Super AI/Competetion/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train036.csv
-/Super AI/Competetion/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train037.csv
-/Super AI/Competetion/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train038.csv
-/Super AI/Competetion/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train039.csv
-/Super AI/Competetion/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train040.csv
-/Super AI/Competetion/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train041.csv
-/Super AI/Competetion/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train042.csv
-/Super AI/Competetion/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train043.csv
-/Super AI/Competetion/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train044.csv
-/Super AI/Competetion/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train045.csv
-/Super AI/Competetion/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train046.csv
-/Super AI/Competetion/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train047.csv
-/Super AI/Competetion/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train048.csv
-/Super AI/Competetion/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train049.csv
-/Super AI/Competetion/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train050.csv
-/Super AI/Competetion/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train051.csv
-/Super AI/Competetion/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train052.csv
-/Super AI/Competetion/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train053.csv
-/Super AI/Competetion/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train054.csv
-/Super AI/Competetion/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train055.csv
-/Super AI/Competetion/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train056.csv
-/Super AI/Competetion/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train057.csv
-/Super AI/Competetion/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train058.csv
-/Super AI/Competetion/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train059.csv
-/Super AI/Competetion/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train060.csv
-/Super AI/Competetion/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train061.csv
-/Super AI/Competetion/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train062.csv
-/Super AI/Competetion/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train063.csv
-/Super AI/Competetion/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train064.csv
-/Super AI/Competetion/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train065.csv
-/Super AI/Competetion/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train066.csv
-/Super AI/Competetion/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train067.csv
-/Super AI/Competetion/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train068.csv
-/Super AI/Competetion/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train069.csv
-/Super AI/Competetion/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train070.csv
-/Super AI/Competetion/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train071.csv
-/Super AI/Competetion/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train072.csv
-/Super AI/Competetion/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train073.csv
-/Super AI/Competetion/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train074.csv
-/Super AI/Competetion/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train075.csv
-/Super AI/Competetion/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train076.csv
-/Super AI/Competetion/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train077.csv
-/Super AI/Competetion/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train078.csv
-/Super AI/Competetion/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train079.csv
-/Super AI/Competetion/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train080.csv
-/Super AI/Competetion/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train081.csv
-/Super AI/Competetion/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train082.csv
-/Super AI/Competetion/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train083.csv
-/Super AI/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train001.csv
-/Super AI/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train002.csv
-/Super AI/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train003.csv
-/Super AI/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train004.csv
-/Super AI/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train005.csv
-/Super AI/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train006.csv
-/Super AI/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train007.csv
-/Super AI/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train008.csv
-/Super AI/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train009.csv
-/Super AI/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train010.csv
-/Super AI/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train011.csv
-/Super AI/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train012.csv
-/Super AI/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train013.csv
-/Super AI/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train014.csv
-/Super AI/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train015.csv
-/Super AI/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train016.csv
-/Super AI/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train017.csv
-/Super AI/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train018.csv
-/Super AI/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train019.csv
-/Super AI/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train020.csv
-/Super AI/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train021.csv
-/Super AI/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train022.csv
-/Super AI/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train023.csv
-/Super AI/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train024.csv
-/Super AI/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train025.csv
-/Super AI/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train026.csv
-/Super AI/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train027.csv
-/Super AI/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train028.csv
-/Super AI/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train029.csv
-/Super AI/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train030.csv
-/Super AI/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train031.csv
-/Super AI/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train032.csv
-/Super AI/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train033.csv
-/Super AI/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train034.csv
-/Super AI/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train035.csv
-/Super AI/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train036.csv
-/Super AI/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train037.csv
-/Super AI/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train038.csv
-/Super AI/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train039.csv
-/Super AI/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train040.csv
-/Super AI/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train041.csv
-/Super AI/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train042.csv
-/Super AI/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train043.csv
-/Super AI/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train044.csv
-/Super AI/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train045.csv
-/Super AI/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train046.csv
-/Super AI/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train047.csv
-/Super AI/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train048.csv
-/Super AI/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train049.csv
-/Super AI/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train050.csv
-/Super AI/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train051.csv
-/Super AI/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train052.csv
-/Super AI/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train053.csv
-/Super AI/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train054.csv
-/Super AI/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train055.csv
-/Super AI/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train056.csv
-/Super AI/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train057.csv
-/Super AI/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train058.csv
-/Super AI/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train059.csv
-/Super AI/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train060.csv
-/Super AI/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train061.csv
-/Super AI/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train062.csv
-/Super AI/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train063.csv
-/Super AI/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train064.csv
-/Super AI/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train065.csv
-/Super AI/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train066.csv
-/Super AI/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train067.csv
-/Super AI/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train068.csv
-/Super AI/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train069.csv
-/Super AI/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train070.csv
-/Super AI/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train071.csv
-/Super AI/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train072.csv
-/Super AI/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train073.csv
-/Super AI/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train074.csv
-/Super AI/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train075.csv
-/Super AI/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train076.csv
-/Super AI/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train077.csv
-/Super AI/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train078.csv
-/Super AI/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train079.csv
-/Super AI/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train080.csv
-/Super AI/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train081.csv
-/Super AI/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train082.csv
-/Super AI/super-ai-engineer-ss-6-sleep-stage-classification/train/train/train083.csv
-/Super AI/super-ai-engineer-ss-6-sleep-stage-classification.zip
-/Super AI/tasks/competition_heart_disease_f2/runs/competition-heart-disease-f2/attempt-01/workspace/train.csv
-/Super AI/tasks/competition_playground_s6e3/runs/competition-playground-s6e3/attempt-01/workspace/test.csv
-/Super AI/tasks/competition_playground_s6e3/runs/competition-playground-s6e3/attempt-01/workspace/train.csv
-/Super AI/tasks/competition_playground_s6e3/runs/competition-playground-s6e3/attempt-02/workspace/test.csv
-/Super AI/tasks/competition_playground_s6e3/runs/competition-playground-s6e3/attempt-02/workspace/train.csv
-/Super AI/tasks/competition_playground_s6e3/runs/competition-playground-s6e3/attempt-03/workspace/test.csv
-/Super AI/tasks/competition_playground_s6e3/runs/competition-playground-s6e3/attempt-03/workspace/train.csv
-/Super AI/tmp/sleep_stage_smoke_dataset/train/train001.csv
-
-# Local secrets
-**/.env
-**/.env.*
-!**/.env.example
-**/*.swp
-
-# Excluded heavy Super AI datasets and artifacts
-/Super AI/Competetion/super-ai-engineer-ss-6-sleep-stage-classification
-/Super AI/super-ai-engineer-ss-6-sleep-stage-classification/test_segment
-/Super AI/Competetion/playground-series-s6e3
-/Super AI/Competetion/super-ai-engineer-ss-6-heart-disease-prediction
-/Super AI/tasks/competition_playground_s6e3
-/Super AI/Competetion/Hack3
-/Super AI/tasks/competition_heart_disease_f2
-/Super AI/Competetion/Video
-
-# Extra local tool state
-**/.git
-**/.gradle/
-**/.sisyphus/
-**/.swc/
-**/.uv-cache/
-**/.cursor/
-**/.codex/tmp/
-**/.codex/shell_snapshots/
-**/_bmad-output/
+# Excluded heavy experiment datasets and artifacts
+/experiments/Super AI/Competetion/super-ai-engineer-ss-6-sleep-stage-classification/
+/experiments/Super AI/super-ai-engineer-ss-6-sleep-stage-classification/test_segment/
+/experiments/Super AI/Competetion/playground-series-s6e3/
+/experiments/Super AI/Competetion/super-ai-engineer-ss-6-heart-disease-prediction/
+/experiments/Super AI/tasks/competition_playground_s6e3/
+/experiments/Super AI/Competetion/Hack3/
+/experiments/Super AI/tasks/competition_heart_disease_f2/
+/experiments/Super AI/Competetion/Video/
 
 # Excluded tmux runtime state
-/sub-tmux/folder_test/.opencode/
-/sub-tmux/.opencode/log/
-/sub-tmux/.opencode/status/
-/sub-tmux/.opencode/tasks/
+/tooling/sub-tmux/folder_test/.opencode/
+/tooling/sub-tmux/.opencode/log/
+/tooling/sub-tmux/.opencode/status/
+/tooling/sub-tmux/.opencode/tasks/
+
+# Excluded large individual files
+/assets/app.zip
+/apps/Auto-Claude/apps/frontend/resources/icon.png
+/tooling/opensoure/opencode/packages/console/app/src/asset/lander/opencode-comparison-min.mp4
